@@ -118,11 +118,28 @@ app.post('/register', (req, res) => {
 });
 
 
+// Endpoint para iniciar sesión
+app.post('/login', (req, res) => {
+  const { correo, contraseña } = req.body;
 
+  // Consulta SQL para verificar las credenciales del usuario
+  const query = 'SELECT * FROM usuario WHERE correo = ? AND contraseña = ?';
+  connection.query(query, [correo, contraseña], (err, results) => {
+    if (err) {
+      console.error('Error al iniciar sesión:', err);
+      return res.status(500).json({ message: 'Error interno al intentar iniciar sesión' });
+    }
 
+    if (results.length === 0) {
+      // No se encontró ningún usuario con las credenciales proporcionadas
+      return res.status(401).json({ message: 'Credenciales incorrectas. Por favor, verifica tu correo y contraseña.' });
+    }
 
-
-
+    // Usuario encontrado, enviar respuesta con los datos del usuario
+    const user = results[0];
+    res.status(200).json({ userId: user.user_id, nombre: user.nombre }); // Ajuste aquí
+  });
+});
 
 
 // Iniciar el servidor
