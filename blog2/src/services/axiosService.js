@@ -1,34 +1,38 @@
+// Importa axios y crea una instancia con la configuración base
 import axios from 'axios';
 
-// Crear una instancia de Axios con la configuración base
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000', // Cambia esto a la URL de tu servidor
   timeout: 10000, // Tiempo de espera para las solicitudes (opcional)
   headers: {
     'Content-Type': 'application/json',
-    // Puedes agregar otros encabezados como tokens de autenticación, si es necesario
+    // Puedes agregar otros encabezados como tokens de autenticación si es necesario
   },
 });
 
+// Función para registrar un nuevo usuario
+const registrarUsuario = (nombre, correo, contraseña) => {
+  return axiosInstance.post('/register', { nombre, correo, contraseña });
+};
+
 // Función para obtener categorías
 const obtenerCategorias = () => {
-  return axiosInstance.get('/categories'); // Solicitud GET al endpoint de categorías
+  return axiosInstance.get('/categories');
 };
 
 // Función para obtener artículos
 const obtenerArticulos = () => {
-  return axiosInstance.get('/articles'); // Solicitud GET al endpoint de artículos
+  return axiosInstance.get('/articles');
 };
 
 // Función para obtener comentarios de un artículo
 const obtenerComentarios = (articleId) => {
-  return axiosInstance.get(`/articles/${articleId}/comments`); // Solicitud GET al endpoint de comentarios del artículo
+  return axiosInstance.get(`/articles/${articleId}/comments`);
 };
 
 // Función para enviar un nuevo comentario
 const enviarComentario = (articleId, comentario) => {
-  return axiosInstance.post(`/articles/${articleId}/comments`, { comentario }); // Solicitud POST al endpoint de comentarios del artículo
+  return axiosInstance.post(`/articles/${articleId}/comments`, { comentario });
 };
 
-// Exportar la instancia de Axios y las funciones
-export { axiosInstance, obtenerCategorias, obtenerArticulos, obtenerComentarios, enviarComentario };
+export { axiosInstance, obtenerCategorias, obtenerArticulos, obtenerComentarios, enviarComentario, registrarUsuario };

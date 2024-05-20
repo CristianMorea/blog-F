@@ -7,10 +7,6 @@
         <label for="nombre">Nombre</label>
       </div>
       <div class="user-box">
-        <input type="text" id="apellido" v-model="apellido" required>
-        <label for="apellido">Apellido</label>
-      </div>
-      <div class="user-box">
         <input type="email" id="email" v-model="email" required>
         <label for="email">Correo Electrónico</label>
       </div>
@@ -18,6 +14,9 @@
         <input type="password" id="contrasena" v-model="contrasena" required>
         <label for="contrasena">Contraseña</label>
       </div>
+      <!-- Campo oculto para rol_id -->
+      <input type="hidden" id="rol_id" v-model="rol_id" value="1"> <!-- Valor por defecto para rol_id -->
+      
       <button type="submit">Registrar</button>
       <!-- Mostrar mensaje de registro exitoso -->
       <p v-if="registroExitoso" class="success-message">Registro exitoso</p>
@@ -33,9 +32,9 @@ export default {
   data() {
     return {
       nombre: '',
-      apellido: '',
       email: '',
       contrasena: '',
+      rol_id: 1, // Valor por defecto para rol_id
       registroExitoso: false // Variable para controlar la visibilidad del mensaje de registro exitoso
     };
   },
@@ -44,9 +43,8 @@ export default {
       // Enviar datos de registro al backend
       axios.post('http://localhost:3000/register', {
         nombre: this.nombre,
-        apellido: this.apellido,
         email: this.email,
-        contraseña: this.contrasena
+        contraseña: this.contrasena // Asegúrate de que coincide con el nombre del campo en el backend
       })
       .then(response => {
         // Manejar la respuesta del servidor
@@ -60,22 +58,31 @@ export default {
       })
       .catch(error => {
         // Manejar errores de solicitud
-        console.error('Error al registrar usuario:', error);
+        console.error('Error al registrar usuario:', error.response); // Mostrar respuesta detallada del error
+        let errorMessage = 'Hubo un error al registrar el usuario.';
+
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage += ' ' + error.response.data.message;
+        } else {
+          errorMessage += ' Por favor, inténtalo de nuevo más tarde.';
+        }
+
+        // Mostrar un mensaje de error al usuario
+        alert(errorMessage);
         // Limpiar campos después de un registro fallido
         this.limpiarCampos();
-        // Puedes mostrar un mensaje de error al usuario o realizar otras acciones según sea necesario
       });
     },
     limpiarCampos() {
       // Limpiar campos después de un registro exitoso o fallido
       this.nombre = '';
-      this.apellido = '';
       this.email = '';
       this.contrasena = '';
     }
   }
 };
 </script>
+
 
 <style scoped>
 .register {

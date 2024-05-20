@@ -8,10 +8,13 @@ const port = 3000; // Asegúrate de usar el puerto correcto
 
 // Middleware para CORS
 app.use(cors({
-  origin: ['http://localhost:8080','http://localhost:8081'], // Restringir orígenes permitidos
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-  allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+  origin: ['http://localhost:8080', 'http://localhost:8081'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// Middleware para procesar body de JSON
+app.use(bodyParser.json());
 
 // Conexión a la base de datos MySQL
 const connection = mysql.createConnection({
@@ -27,42 +30,53 @@ connection.connect((err) => {
     console.error('Error al conectar a la base de datos:', err);
     process.exit(1); // Termina si hay un error de conexión
   } else {
-    console.log('Conexión establecida con la base de datos MySQL'); // Confirmación de conexión
+    console.log('Conexión establecida con la base de datos MySQL');
   }
 });
 
 // Endpoint para obtener categorías
 app.get('/categories', (req, res) => {
-  const query = 'SELECT * FROM categoria'; // Consulta para obtener categorías
+  const query = 'SELECT * FROM categoria';
   connection.query(query, (err, results) => {
     if (err) {
-      console.error('Error al obtener categorías:', err); // Manejar errores de la consulta
-      res.status(500).send('Error al obtener categorías'); // Código de estado 500 en caso de error
+      console.error('Error al obtener categorías:', err);
+      res.status(500).send('Error al obtener categorías');
     } else {
-      res.json(results); // Enviar resultados como JSON
+      res.json(results);
     }
   });
 });
-
-
 
 // Endpoint para obtener artículos
 app.get('/articles', (req, res) => {
-  const query = 'SELECT * FROM articulo'; // Consulta para obtener todos los artículos
+  const query = 'SELECT * FROM articulo';
   connection.query(query, (err, results) => {
     if (err) {
-      console.error('Error al obtener artículos:', err); // Manejar errores de la consulta
-      res.status(500).send('Error al obtener artículos'); // Código de estado 500 en caso de error
+      console.error('Error al obtener artículos:', err);
+      res.status(500).send('Error al obtener artículos');
     } else {
-      res.json(results); // Enviar resultados como JSON
+      res.json(results);
     }
   });
 });
+
+// Endpoint para registrar usuario
+const insertUsuarioRegistro = (usuario, callback) => {
+  const { nombre, correo, contraseña } = usuario;
+  const query = `
+    INSERT INTO usuario(nombre, correo, contraseña, rol_id, fecha_creacion)
+    VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
+  `;
+  connection.query(query, [nombre, correo, contraseña], (err, results) => {
+    if (err) {
+      return callback(err, null);
+    }
+    callback(null, results.insertId); // Devuelve el ID del nuevo registro insertado
+  });
+};
 
 
 // Iniciar el servidor
 app.listen(port, () => {
-
-  console.log(`Servidor corriendo en el puerto ${port}`); // Confirmación de que el servidor está ejecutándose
+  console.log(`Servidor corriendo en el puerto ${port}`);
 });
-
