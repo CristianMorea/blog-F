@@ -10,6 +10,11 @@ const axiosInstance = axios.create({
   },
 });
 
+// Función para iniciar sesión
+const iniciarSesion = (correo, contraseña) => {
+  return axiosInstance.post('/login', { correo, contraseña });
+};
+
 // Función para registrar un nuevo usuario
 const registrarUsuario = (nombre, correo, contraseña) => {
   return axiosInstance.post('/register', { nombre, correo, contraseña });
@@ -49,4 +54,4 @@ const enviarComentario = (articleId, comentario) => {
   return axiosInstance.post(`/articles/${articleId}/comments`, { comentario });
 };
 
-export { axiosInstance, obtenerCategorias, obtenerArticulos, obtenerComentarios, enviarComentario, registrarUsuario };
+export { axiosInstance, obtenerCategorias, obtenerArticulos, obtenerComentarios, enviarComentario, registrarUsuario,iniciarSesion };

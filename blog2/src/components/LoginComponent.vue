@@ -1,4 +1,3 @@
-<!-- LoginComponent.vue -->
 <template>
   <div class="login">
     <h2>Iniciar Sesión</h2>
@@ -14,12 +13,15 @@
         </div>
         <button type="submit">Iniciar Sesión</button>
       </form>
-      <button @click="showRegisterForm">Registrarse</button> <!-- Cambiar para redirigir -->
+      <button @click="showRegisterForm">Registrarse</button>
     </div>
   </div>
 </template>
 
 <script>
+// Importa la función iniciarSesion
+import { iniciarSesion } from '@/services/axiosService'; // Reemplaza la ruta según sea necesario
+
 export default {
   name: 'LoginComponent',
   data() {
@@ -29,8 +31,22 @@ export default {
     };
   },
   methods: {
-    login() {
-      // Aquí puedes poner tu lógica de inicio de sesión
+    async login() {
+      try {
+        const response = await iniciarSesion(this.email, this.password);
+        // Manejar la respuesta exitosa
+        const { userId, nombre } = response.data;
+        console.log('Inicio de sesión exitoso', userId, nombre);
+        // Redirigir a la página de inicio después de iniciar sesión exitosamente
+        this.$router.push({ name: 'Home' }); // Reemplaza 'Home' con el nombre de tu ruta de inicio
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          alert('Credenciales incorrectas. Por favor, verifica tu correo y contraseña.');
+        } else {
+          console.error('Error al iniciar sesión:', error);
+          alert('Error interno al intentar iniciar sesión');
+        }
+      }
     },
     showRegisterForm() {
       this.$router.push({ name: 'Register' }); // Redirigir al componente de registro
@@ -38,6 +54,9 @@ export default {
   },
 };
 </script>
+
+
+
 
 <style scoped>
 .login {
