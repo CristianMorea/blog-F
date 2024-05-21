@@ -20,10 +20,24 @@ const obtenerCategorias = () => {
   return axiosInstance.get('/categories');
 };
 
+
+
+
 // Función para obtener artículos
 const obtenerArticulos = () => {
   return axiosInstance.get('/articles');
 };
+
+
+
+
+
+
+
+
+
+
+
 
 // Función para obtener comentarios de un artículo
 const obtenerComentarios = (articleId) => {

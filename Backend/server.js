@@ -84,7 +84,7 @@ const insertUsuarioRegistro = (usuario, callback) => {
     // Si el correo no está registrado, proceder con la inserción del usuario
     const insertQuery = `
       INSERT INTO usuario(nombre, correo, contraseña, rol_id, fecha_creacion)
-      VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
+      VALUES (?, ?, ?, 3, CURRENT_TIMESTAMP)
     `;
     connection.query(insertQuery, [nombre, correo, contraseña], (err, results) => {
       if (err) {
