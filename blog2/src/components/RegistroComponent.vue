@@ -15,7 +15,7 @@
         <label for="contrasena">Contraseña</label>
       </div>
       <!-- Campo oculto para rol_id -->
-      <input type="hidden" id="rol_id" v-model="rol_id" value="1"> <!-- Valor por defecto para rol_id -->
+      <input type="hidden" id="rol_id" v-model="rol_id" value="3"> <!-- Valor por defecto para rol_id -->
       
       <button type="submit">Registrar</button>
       <!-- Mostrar mensaje de registro exitoso -->
@@ -34,7 +34,7 @@ export default {
       nombre: '',
       email: '',
       contrasena: '',
-      rol_id: 1, // Valor por defecto para rol_id
+      rol_id: 3, // Valor por defecto para rol_id
       registroExitoso: false // Variable para controlar la visibilidad del mensaje de registro exitoso
     };
   },
