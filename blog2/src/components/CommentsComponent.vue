@@ -1,22 +1,25 @@
 <template>
   <div class="comments-section">
-    <h3>Comentarios</h3>
+    <h3 style="color: black;">Comentarios</h3>
     <div v-if="loading">Cargando comentarios...</div>
     <div v-if="error" class="error-message">{{ error }}</div>
     <ul v-if="comments.length > 0" class="comment-list">
       <li v-for="comment in comments" :key="comment.id" class="comment-item">
         <div class="comment-content">
-          <p>{{ comment.comentario }}</p>
+          <p class="comment-text">{{ comment.comentario }}</p>
           <p><strong>{{ comment.fecha }}</strong></p>
         </div>
       </li>
     </ul>
-    <p v-else>No hay comentarios disponibles.</p>
+    <p v-else style="color: black;">No hay comentarios disponibles.</p>
 
     <!-- Mensaje de éxito al cargar comentarios -->
     <p v-if="comments.length > 0 && !loading && !error" class="success-message">
       ¡Comentarios cargados correctamente!
     </p>
+
+    <!-- Espacio para comentarios -->
+    <div class="comment-space"></div>
 
     <!-- Formulario para crear un nuevo comentario -->
     <form @submit.prevent="submitComment" class="comment-form">
@@ -25,6 +28,7 @@
     </form>
   </div>
 </template>
+
 
 <script>
 import { enviarComentario, obtenerComentarios } from '@/services/axiosService';
@@ -82,6 +86,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Estilos CSS para el espacio entre el formulario de comentarios y la sección de comentarios */
+.comment-space {
+  margin-bottom: 20px;
+}
+
+.comment-text {
+  color: black; /* Cambio del color de la letra de los comentarios a negro */
+}
+</style>
 
 <style scoped>
 .comments-section {

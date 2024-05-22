@@ -1,22 +1,24 @@
 <template>
   <div class="articles-container">
-    <!-- Mostrar el artículo actual -->
-    <div v-if="currentArticle" class="article-card">
-      <h2 class="article-title">{{ currentArticle.titulo }}</h2>
-      <p class="article-content">{{ currentArticle.contenido }}</p>
+    <!-- Mostrar artículos de la página actual -->
+    <div v-for="(article, index) in paginatedArticles" :key="article.id" class="article-card">
+      <h2 class="article-title">{{ article.titulo }}</h2>
+      <p class="article-content">{{ article.contenido }}</p>
+
+      <!-- Mostrar sección de comentarios solo en el primer artículo -->
+      <div v-if="index === 0">
+        <comments-component :article-id="article.id" />
+      </div>
     </div>
 
     <!-- Mostrar mensaje si no hay artículos -->
-    <p v-if="!currentArticle && errorMessage" class="error-message">{{ errorMessage }}</p>
-
-    <!-- Integrar CommentsComponent solo si hay un artículo actual -->
-    <comments-component v-if="currentArticle" :article-id="currentArticle.id" />
+    <p v-if="!paginatedArticles.length && errorMessage" class="error-message">{{ errorMessage }}</p>
 
     <!-- Controles de paginación -->
-    <div class="pagination-controls">
-      <button @click="previousArticle" :disabled="currentPage === 1">Anterior</button>
+    <div class="pagination-controls" v-if="totalPageCount > 1">
+      <button @click="previousPage" :disabled="currentPage === 1">Anterior</button>
       <span>{{ currentPage }}</span>
-      <button @click="nextArticle" :disabled="currentPage === totalPageCount">Siguiente</button>
+      <button @click="nextPage" :disabled="currentPage === totalPageCount">Siguiente</button>
     </div>
   </div>
 </template>
@@ -39,12 +41,13 @@ export default {
     };
   },
   computed: {
-    currentArticle() {
-      const index = (this.currentPage - 1) * this.articlesPerPage;
-      return this.articles[index];
-    },
     totalPageCount() {
       return Math.ceil(this.articles.length / this.articlesPerPage);
+    },
+    paginatedArticles() {
+      const startIndex = (this.currentPage - 1) * this.articlesPerPage;
+      const endIndex = startIndex + this.articlesPerPage;
+      return this.articles.slice(startIndex, endIndex);
     }
   },
   mounted() {
@@ -66,12 +69,12 @@ export default {
         this.errorMessage = 'Error al obtener artículos. Inténtalo de nuevo más tarde.';
       }
     },
-    previousArticle() {
+    previousPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
     },
-    nextArticle() {
+    nextPage() {
       if (this.currentPage < this.totalPageCount) {
         this.currentPage++;
       }
@@ -79,6 +82,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .articles-container {
